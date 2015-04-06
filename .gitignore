@@ -58,3 +58,4 @@ target/
 
 # Local Stuff
 .DS_Store
+.envrc
