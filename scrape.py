@@ -1,6 +1,5 @@
 import http.client
 from bs4 import BeautifulSoup
-from ..extensions import db
 from ..models import Player, Passing, Game
 import re
 
