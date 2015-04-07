@@ -1,0 +1,40 @@
+
+<div id="contentBox" style="margin:0px auto; width:70%">
+
+  <div id="column1" style="float:left; margin:0; width:25%;">
+   Player Name
+  </div>
+
+  <div id="column2" style="float:left; margin:0;width:25%;">
+   Position
+  </div>
+
+  <div id="column3" style="float:left; margin:0;width:25%">
+   Team
+  </div>
+
+  <div id="column3" style="float:left; margin:0;width:25%">
+   Year
+  </div>
+</div>
+
+<div id="contentBox" style="margin:0px auto; width:70%">
+  {% for player in players %}
+  <div id="column1" style="float:left; margin:0; width:25%;">
+      <a href="{% url 'data_grabber:detail' player.id %}">{{ player.name }}</a>
+    </div>
+
+    <div id="column2" style="float:left; margin:0; width:25%;">
+      {{ player.position }}
+    </div>
+
+    <div id="column3" style="float:left; margin:0; width:25%;">
+      {{ player.team }}
+    </div>
+
+    <div id="column3" style="float:left; margin:0; width:25%;">
+      {{ player.year }}
+    </div>
+
+  {% endfor %}
+</div>
