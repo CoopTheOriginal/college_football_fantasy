@@ -28,6 +28,7 @@ class Passing(models.Model):
     completions = models.IntegerField()
     yards = models.IntegerField()
     touchdowns = models.IntegerField()
+    interceptions = models.IntegerField()
 
     def __repr__(self):
         return "Pass Attempts: {}".format(self.attempts)

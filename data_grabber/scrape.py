@@ -1,6 +1,6 @@
 import http.client
 from bs4 import BeautifulSoup
-from .models import Player, Passing, Game
+from .models import Player, Passing, Game, Rushing
 import re
 
 
@@ -49,36 +49,37 @@ def save_player_data(bs_chunk, position):
 
 
 def quarterback_stat_lookup(player):
-    player_name = player.name.replace(' ', '-')
+    print('player', player.name)
+    player_name = player.name.replace('.', '')
+    player_name = player_name.replace(' ', '-')
+    print('player name', player_name)
     souped_page = url_request('players/playerpage/' + str(player.ext_id) + '/' + player_name)
-
+    souped_page = souped_page.find('table', attrs={'class': 'borderTop'})
     all_stats = souped_page.find_all('tr', attrs={'class': 'row1'})
-    all_stats.extend(souped_page.find_all('tr', attrs={'class': 'row1'}))
+    all_stats.extend(souped_page.find_all('tr', attrs={'class': 'row2'}))
 
-    for stat in all_stats:
+    for stat in all_stats[1:]:
         each_stat = stat.find_all('td')
-        print(each_stat)
         score = score_breakout(each_stat[2].text)
-        print(score)
-        game_exists = Game.objects.get(team=player.team,
-                                       game_date=each_stat[0].text,
-                                       opponent=each_stat[1].text,
-                                       your_score=score[0],
-                                       opponent_score=score[1]).first()
-        if not game_exists:
-            game_stats = Game(team=player.team,
-                              game_date=each_stat[0].text,
-                              opponent=each_stat[1].text,
-                              your_score=score[0],
-                              opponent_score=score[1])
-
-            pass_stats = Passing(player_id=player.id,
+        game_obj, created = Game.objects.get_or_create(team=player.team,
+                                                       game_date=each_stat[0].text,
+                                                       opponent=each_stat[1].text,
+                                                       your_score=score[0],
+                                                       opponent_score=score[1])
+        if created:
+            pass_stats = Passing(player_id=player,
                                  attempts=each_stat[3].text,
                                  completions=each_stat[4].text,
                                  yards=each_stat[6].text,
-                                 touchdowns=each_stat[8].text)
+                                 touchdowns=each_stat[8].text,
+                                 interceptions=each_stat[9].text)
+
+            rush_stats = Rushing(player_id=player,
+                                 attempts=each_stat[10].text,
+                                 yards=each_stat[11].text,
+                                 touchdowns=each_stat[13].text)
             pass_stats.save()
-            game_stats.save()
+            rush_stats.save()
 
 def lookup_specific_stats(player_position):
     all_players = Player.objects.filter(position=player_position)
@@ -86,9 +87,7 @@ def lookup_specific_stats(player_position):
         quarterback_stat_lookup(player)
 
 def score_breakout(score):
-    scores = score.split('-')
-    cleaned = [score.replace('W\xa0', '') for score in scores]
-    return cleaned
+    return re.findall(r'\d+', score)
 
 
 
