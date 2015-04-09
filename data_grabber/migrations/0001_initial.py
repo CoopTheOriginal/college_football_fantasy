@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Game',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('team', models.CharField(max_length=100)),
-                ('game_date', models.CharField(max_length=50)),
+                ('game_date', models.DateField()),
                 ('opponent', models.CharField(max_length=100)),
                 ('your_score', models.IntegerField()),
                 ('opponent_score', models.IntegerField()),
@@ -24,17 +24,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Passing',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('attempts', models.IntegerField()),
                 ('completions', models.IntegerField()),
                 ('yards', models.IntegerField()),
                 ('touchdowns', models.IntegerField()),
+                ('interceptions', models.IntegerField()),
+                ('game', models.ForeignKey(to='data_grabber.Game')),
             ],
         ),
         migrations.CreateModel(
             name='Player',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=100)),
                 ('team', models.CharField(max_length=100)),
                 ('position', models.CharField(max_length=50)),
@@ -45,16 +47,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Rushing',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('attempts', models.IntegerField()),
                 ('yards', models.IntegerField()),
                 ('touchdowns', models.IntegerField()),
-                ('player_id', models.ForeignKey(to='data_grabber.Player')),
+                ('game', models.ForeignKey(to='data_grabber.Game')),
+                ('player', models.ForeignKey(to='data_grabber.Player')),
             ],
         ),
         migrations.AddField(
             model_name='passing',
-            name='player_id',
+            name='player',
             field=models.ForeignKey(to='data_grabber.Player'),
         ),
     ]

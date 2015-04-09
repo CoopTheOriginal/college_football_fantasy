@@ -13,7 +13,7 @@ class Player(models.Model):
 
 class Game(models.Model):
     team = models.CharField(max_length=100)
-    game_date = models.CharField(max_length=50)
+    game_date = models.DateField()
     opponent = models.CharField(max_length=100)
     your_score = models.IntegerField()
     opponent_score = models.IntegerField()
@@ -23,7 +23,8 @@ class Game(models.Model):
 
 
 class Passing(models.Model):
-    player_id = models.ForeignKey(Player)
+    player = models.ForeignKey(Player)
+    game = models.ForeignKey(Game)
     attempts = models.IntegerField()
     completions = models.IntegerField()
     yards = models.IntegerField()
@@ -35,7 +36,8 @@ class Passing(models.Model):
 
 
 class Rushing(models.Model):
-    player_id = models.ForeignKey(Player)
+    player = models.ForeignKey(Player)
+    game = models.ForeignKey(Game)
     attempts = models.IntegerField()
     yards = models.IntegerField()
     touchdowns = models.IntegerField()
