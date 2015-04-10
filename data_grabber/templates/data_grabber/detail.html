@@ -1,13 +1,53 @@
-<h1>{{ player.name }}</h1>
+<div id="contentBox" style="margin:0px auto; width:70%">
+  <h1>{{ player.name }}</h1>
+</div>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<li>
-  {{ player.team }}
-</li>
-<li>
-  {{ player.position }}
-</li>
-<li>
-  {{ player.year }}
-</li>
+<div id="contentBox" style="margin:0px auto; width:70%">
+
+  <div id="column1" style="float:left; margin:0; width:20%;">
+   Passing Attempts
+  </div>
+
+  <div id="column2" style="float:left; margin:0;width:20%;">
+   Completions
+  </div>
+
+  <div id="column3" style="float:left; margin:0;width:20%">
+   Passing Yards
+  </div>
+
+  <div id="column4" style="float:left; margin:0;width:20%">
+   Touchdowns
+  </div>
+
+  <div id="column5" style="float:left; margin:0;width:20%">
+   Interceptions
+  </div>
+</div>
+
+<div id="contentBox" style="margin:0px auto; width:70%">
+  {% for player in players %}
+  <div id="column1" style="float:left; margin:0; width:20%;">
+      <a href="{% url 'data_grabber:detail' player.id %}">{{ player.name }}</a>
+    </div>
+
+    <div id="column2" style="float:left; margin:0; width:20%;">
+      {{ player.position }}
+    </div>
+
+    <div id="column3" style="float:left; margin:0; width:20%;">
+      {{ player.team }}
+    </div>
+
+    <div id="column4" style="float:left; margin:0; width:20%;">
+      {{ player.year }}
+    </div>
+
+    <div id="column5" style="float:left; margin:0; width:20%;">
+      {{ player.year }}
+    </div>
+
+  {% endfor %}
+</div>
