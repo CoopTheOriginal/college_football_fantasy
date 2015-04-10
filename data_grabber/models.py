@@ -17,6 +17,7 @@ class Game(models.Model):
     opponent = models.CharField(max_length=100)
     your_score = models.IntegerField()
     opponent_score = models.IntegerField()
+    home = models.BooleanField()
 
     def __repr__(self):
         return "Team: {}".format(self.team)

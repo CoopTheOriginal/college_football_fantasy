@@ -59,11 +59,13 @@ def quarterback_stat_lookup(player):
         score = score_breakout(each_stat[2].text)
         game_date = each_stat[0].text + '/2014'
         game_date = datetime.datetime.strptime(game_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        home_away, opp = home_away(each_stat[1].text)
         game_obj, created = Game.objects.get_or_create(team=player.team,
                                                        game_date=game_date,
-                                                       opponent=each_stat[1].text,
+                                                       opponent=opp,
                                                        your_score=score[0],
-                                                       opponent_score=score[1])
+                                                       opponent_score=score[1],
+                                                       home=home_away)
         if created:
             pass_stats = Passing(player=player,
                                  attempts=each_stat[3].text,
@@ -89,7 +91,11 @@ def lookup_specific_stats(player_position):
 def score_breakout(score):
     return re.findall(r'\d+', score)
 
-
+def home_away(opponent_text):
+    if '@' in opponent_text:
+        return False, opponent_text.replace('@', '')
+    else:
+        return True, opponent_text
 
 
 
