@@ -11,7 +11,7 @@ from .models import Player, PlayerData, Game
 def index(request):
     context = {'players': Player.objects.all()}
     initial_player_lookup()
-    lookup_specific_stats('qb')
+    #lookup_specific_stats('qb')
     return render(request, 'data_grabber/index.html', context)
 
 def player_detail(request, player_id):

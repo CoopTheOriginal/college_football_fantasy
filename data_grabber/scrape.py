@@ -13,18 +13,16 @@ def url_request(partial_path):
     server.endheaders()
     reply = server.getresponse()
     if reply.status != 200:
-        return 'Error sending request {0} {1}'.format(reply.status,
-                                                      reply.reason)
+        return 'Error sending request {0} {1}'.format(reply.status, reply.reason)
     else:
         soup_object = BeautifulSoup(reply.read())
         reply.close()
         return soup_object
 
-
 def initial_player_lookup(position='qb'):
     position_url = {'qb':'PTDS', 'rb':'RYDS', 'wr':'RECTDS'}
-    position_path = 'stats/leaders/NCAAF/' + position_url[position] + \
-                                            '/regularseason?&start_row=1'
+    position_path = 'stats/leaders/sortableTable/NCAAF/' + position_url[position] + \
+                                            '/regularseason?&print_rows=9999'
     souped_page = url_request(position_path)
     all_players = souped_page.find_all('tr', attrs={'class': 'row2'})
     all_players.extend(souped_page.find_all('tr', attrs={'class': 'row1'}))
