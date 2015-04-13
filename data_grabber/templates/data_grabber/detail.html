@@ -6,48 +6,58 @@
 
 <div id="contentBox" style="margin:0px auto; width:70%">
 
-  <div id="column1" style="float:left; margin:0; width:20%;">
+  <div id="column1" style="float:left; margin:0; width:16%;">
+   Opponent
+  </div>
+
+  <div id="column2" style="float:left; margin:0; width:16%;">
    Passing Attempts
   </div>
 
-  <div id="column2" style="float:left; margin:0;width:20%;">
-   Completions
+  <div id="column3" style="float:left; margin:0;width:16%;">
+   Passes Completed
   </div>
 
-  <div id="column3" style="float:left; margin:0;width:20%">
+  <div id="column4" style="float:left; margin:0;width:16%">
    Passing Yards
   </div>
 
-  <div id="column4" style="float:left; margin:0;width:20%">
-   Touchdowns
+  <div id="column5" style="float:left; margin:0;width:16%">
+   Passing Touchdowns
   </div>
 
-  <div id="column5" style="float:left; margin:0;width:20%">
+  <div id="column6" style="float:left; margin:0;width:16%">
    Interceptions
   </div>
 </div>
 
 <div id="contentBox" style="margin:0px auto; width:70%">
-  {% for player in players %}
-  <div id="column1" style="float:left; margin:0; width:20%;">
-      <a href="{% url 'data_grabber:detail' player.id %}">{{ player.name }}</a>
+  {% for stat in player_data %}
+
+    <div id="column1" style="float:left; margin:0; width:16%;">
+      {{ stat.game.opponent }}
     </div>
 
-    <div id="column2" style="float:left; margin:0; width:20%;">
-      {{ player.position }}
+    <div id="column2" style="float:left; margin:0; width:16%;">
+      {{ stat.pass_attempts }}
     </div>
 
-    <div id="column3" style="float:left; margin:0; width:20%;">
-      {{ player.team }}
+    <div id="column3" style="float:left; margin:0; width:16%;">
+      {{ stat.pass_completions }}
     </div>
 
-    <div id="column4" style="float:left; margin:0; width:20%;">
-      {{ player.year }}
+    <div id="column4" style="float:left; margin:0; width:16%;">
+      {{ stat.pass_yards }}
     </div>
 
-    <div id="column5" style="float:left; margin:0; width:20%;">
-      {{ player.year }}
+    <div id="column5" style="float:left; margin:0; width:16%;">
+      {{ stat.pass_touchdowns }}
     </div>
+
+    <div id="column6" style="float:left; margin:0; width:16%;">
+      {{ stat.interceptions }}
+    </div>
+
 
   {% endfor %}
 </div>

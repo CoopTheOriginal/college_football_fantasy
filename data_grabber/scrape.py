@@ -1,6 +1,6 @@
 import http.client
 from bs4 import BeautifulSoup
-from .models import Player, Passing, Game, Rushing
+from .models import Player, Game, PlayerData
 import re
 import datetime
 
@@ -38,10 +38,10 @@ def save_player_data(bs_chunk, position):
     if not Player.objects.filter(ext_id=ext_id):
         each_player = bs_chunk.find_all('td')
         new = Player(ext_id=ext_id,
-                        name=each_player[1].text,
-                        team=each_player[2].text,
-                        position=position,
-                        year=2014)
+                     name=each_player[1].text,
+                     team=each_player[2].text,
+                     position=position,
+                     year=2014)
         new.save()
 
 
@@ -59,62 +59,40 @@ def quarterback_stat_lookup(player):
         score = score_breakout(each_stat[2].text)
         game_date = each_stat[0].text + '/2014'
         game_date = datetime.datetime.strptime(game_date, '%m/%d/%Y').strftime('%Y-%m-%d')
-        home_away, opp = home_away(each_stat[1].text)
+        home_away, opp = home_check(each_stat[1].text)
         game_obj, created = Game.objects.get_or_create(team=player.team,
                                                        game_date=game_date,
                                                        opponent=opp,
                                                        your_score=score[0],
                                                        opponent_score=score[1],
                                                        home=home_away)
+        print(each_stat)
         if created:
-            pass_stats = Passing(player=player,
-                                 attempts=each_stat[3].text,
-                                 completions=each_stat[4].text,
-                                 yards=each_stat[6].text,
-                                 touchdowns=each_stat[8].text,
-                                 interceptions=each_stat[9].text,
-                                 game=game_obj)
+            player_stats = PlayerData(player=player,
+                                      game=game_obj,
+                                      pass_attempts=each_stat[3].text,
+                                      pass_completions=each_stat[4].text,
+                                      pass_yards=each_stat[6].text,
+                                      pass_touchdowns=each_stat[8].text,
+                                      interceptions=each_stat[9].text,
+                                      rush_attempts=each_stat[10].text,
+                                      rush_yards=each_stat[11].text,
+                                      rush_touchdowns=each_stat[13].text)
+            player_stats.save()
 
-            rush_stats = Rushing(player=player,
-                                 attempts=each_stat[10].text,
-                                 yards=each_stat[11].text,
-                                 touchdowns=each_stat[13].text,
-                                 game=game_obj)
-            pass_stats.save()
-            rush_stats.save()
 
 def lookup_specific_stats(player_position):
     all_players = Player.objects.filter(position=player_position)
     for player in all_players:
         quarterback_stat_lookup(player)
 
+
 def score_breakout(score):
     return re.findall(r'\d+', score)
 
-def home_away(opponent_text):
+
+def home_check(opponent_text):
     if '@' in opponent_text:
         return False, opponent_text.replace('@', '')
     else:
         return True, opponent_text
-
-
-
-
-
-
-
-
-#Not using
-def item_lookup(bsoup_item):
-    ind_page = url_request(bsoup_item)
-    souped_item = BeautifulSoup(ind_page)
-
-    item_name = name_lookup(souped_item)
-    item_url = 'http://raleigh.craigslist.com{}'.format(bsoup_item)
-    item_dates = date_lookup(souped_item)
-    item_images = image_lookup(souped_item)
-    item_lat, item_long = lat_long_lookup(souped_item)
-    item_description = description_lookup(souped_item)
-
-    return (item_name, item_url, item_dates, item_images,
-        item_lat, item_long, item_description)

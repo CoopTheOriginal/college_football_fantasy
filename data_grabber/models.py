@@ -23,25 +23,20 @@ class Game(models.Model):
         return "Team: {}".format(self.team)
 
 
-class Passing(models.Model):
+class PlayerData(models.Model):
     player = models.ForeignKey(Player)
     game = models.ForeignKey(Game)
-    attempts = models.IntegerField()
-    completions = models.IntegerField()
-    yards = models.IntegerField()
-    touchdowns = models.IntegerField()
-    interceptions = models.IntegerField()
+    pass_attempts = models.IntegerField(null=True)
+    pass_completions = models.IntegerField(null=True)
+    pass_yards = models.IntegerField(null=True)
+    pass_touchdowns = models.IntegerField(null=True)
+    interceptions = models.IntegerField(null=True)
+    rush_attempts = models.IntegerField(null=True)
+    rush_yards = models.IntegerField(null=True)
+    rush_touchdowns = models.IntegerField(null=True)
+    rec_yards = models.IntegerField(null=True)
+    rec_touchdowns = models.IntegerField(null=True)
+    receptions = models.IntegerField(null=True)
 
     def __repr__(self):
-        return "Pass Attempts: {}".format(self.attempts)
-
-
-class Rushing(models.Model):
-    player = models.ForeignKey(Player)
-    game = models.ForeignKey(Game)
-    attempts = models.IntegerField()
-    yards = models.IntegerField()
-    touchdowns = models.IntegerField()
-
-    def __repr__(self):
-        return "Rush Attempts: {}".format(self.attempts)
+        return "Player_id: {}, Team: {}".format(self.player.pk, self.game.team)

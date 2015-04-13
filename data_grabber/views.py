@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 
 from .scrape import initial_player_lookup, lookup_specific_stats
-from .models import Player
+from .models import Player, PlayerData
 
 
 def index(request):
@@ -15,5 +15,5 @@ def index(request):
     return render(request, 'data_grabber/index.html', context)
 
 def detail(request, player_id):
-    player = get_object_or_404(Player, pk=player_id)
-    return render(request, 'data_grabber/detail.html', {'player': player})
+    player_data = PlayerData.objects.filter(player__pk=player_id)
+    return render(request, 'data_grabber/detail.html', {'player_data': player_data})
