@@ -4,14 +4,14 @@ from django.views import generic
 from django.core.urlresolvers import reverse
 
 
-from .scrape import initial_player_lookup, lookup_specific_stats
+from .scrape import initial_player_lookup, lookup_player_stats
 from .models import Player, PlayerData, Game
 
 
 def index(request):
     context = {'players': Player.objects.all()}
-    initial_player_lookup()
-    #lookup_specific_stats('qb')
+    #initial_player_lookup()
+    lookup_player_stats('qb')
     return render(request, 'data_grabber/index.html', context)
 
 def player_detail(request, player_id):
