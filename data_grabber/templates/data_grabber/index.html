@@ -21,7 +21,7 @@
 <div id="contentBox" style="margin:0px auto; width:70%">
   {% for player in players %}
   <div id="column1" style="float:left; margin:0; width:25%;">
-      <a href="{% url 'data_grabber:detail' player.id %}">{{ player.name }}</a>
+      <a href="{% url 'data_grabber:player_detail' player.id %}">{{ player.name }}</a>
     </div>
 
     <div id="column2" style="float:left; margin:0; width:25%;">

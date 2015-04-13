@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 
 from .scrape import initial_player_lookup, lookup_specific_stats
-from .models import Player, PlayerData
+from .models import Player, PlayerData, Game
 
 
 def index(request):
@@ -14,6 +14,10 @@ def index(request):
     lookup_specific_stats('qb')
     return render(request, 'data_grabber/index.html', context)
 
-def detail(request, player_id):
+def player_detail(request, player_id):
     player_data = PlayerData.objects.filter(player__pk=player_id).order_by('game__game_date')
-    return render(request, 'data_grabber/detail.html', {'player_data': player_data})
+    return render(request, 'data_grabber/player_detail.html', {'player_data': player_data})
+
+def game_detail(request, game_id):
+    game_data = Game.objects.filter(pk=game_id).order_by('game_date')
+    return render(request, 'data_grabber/game_detail.html', {'game_data': game_data})

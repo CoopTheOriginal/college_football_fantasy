@@ -5,7 +5,6 @@ import re
 import datetime
 
 
-
 def url_request(partial_path):
     path = '/collegefootball/' + partial_path
     server = http.client.HTTPConnection('www.cbssports.com')

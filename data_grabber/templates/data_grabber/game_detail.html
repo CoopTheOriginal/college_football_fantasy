@@ -4,53 +4,48 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<div id="contentBox" style="margin:0px auto; width:80%">
+<div id="contentBox" style="margin:0px auto; width:90%">
 <table>
+
     <tr>
       <td>
         Date
       </td>
       <td>
-         Opponent
+         Team
       </td>
       <td>
-        Passing Attempts
+        Opponent
       </td>
       <td>
-        Passes Completed
+        Team Score
       </td>
       <td>
-        Passing Yards
+        Opponent Score
       </td>
       <td>
-        Passing Touchdowns
-      </td>
-      <td>
-        Interceptions
+        Home or Away
       </td>
     </tr>
-  {% for stat in player_data %}
+  {% for game in game_data %}
     <tr>
       <td>
-        {{ stat.game.game_date}}
+        {{ game.game_date}}
       </td>
       <td>
-        {{ stat.game.opponent }}
+        {{ game.team }}
       </td>
       <td>
-        {{ stat.pass_attempts }}
+        {{ game.opponent }}
       </td>
       <td>
-        {{ stat.pass_completions}}
+        {{ game.your_score }}
       </td>
       <td>
-        {{ stat.pass_yards }}
+        {{ game.opponent_score }}
       </td>
       <td>
-        {{ stat.pass_touchdowns }}
-      </td>
-      <td>
-        {{ stat.interceptions }}
+        {{ game.home }}
       </td>
     </tr>
   {% endfor %}
