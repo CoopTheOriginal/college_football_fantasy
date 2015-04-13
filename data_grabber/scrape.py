@@ -66,7 +66,6 @@ def quarterback_stat_lookup(player):
                                                        your_score=score[0],
                                                        opponent_score=score[1],
                                                        home=home_away)
-        print(each_stat)
         if created:
             player_stats = PlayerData(player=player,
                                       game=game_obj,

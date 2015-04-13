@@ -4,60 +4,55 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<div id="contentBox" style="margin:0px auto; width:70%">
-
-  <div id="column1" style="float:left; margin:0; width:16%;">
-   Opponent
-  </div>
-
-  <div id="column2" style="float:left; margin:0; width:16%;">
-   Passing Attempts
-  </div>
-
-  <div id="column3" style="float:left; margin:0;width:16%;">
-   Passes Completed
-  </div>
-
-  <div id="column4" style="float:left; margin:0;width:16%">
-   Passing Yards
-  </div>
-
-  <div id="column5" style="float:left; margin:0;width:16%">
-   Passing Touchdowns
-  </div>
-
-  <div id="column6" style="float:left; margin:0;width:16%">
-   Interceptions
-  </div>
-</div>
-
-<div id="contentBox" style="margin:0px auto; width:70%">
+<div id="contentBox" style="margin:0px auto; width:80%">
+<table>
+    <tr>
+      <td>
+        Date
+      </td>
+      <td>
+         Opponent
+      </td>
+      <td>
+        Passing Attempts
+      </td>
+      <td>
+        Passes Completed
+      </td>
+      <td>
+        Passing Yards
+      </td>
+      <td>
+        Passing Touchdowns
+      </td>
+      <td>
+        Interceptions
+      </td>
+    </tr>
   {% for stat in player_data %}
-
-    <div id="column1" style="float:left; margin:0; width:16%;">
-      {{ stat.game.opponent }}
-    </div>
-
-    <div id="column2" style="float:left; margin:0; width:16%;">
-      {{ stat.pass_attempts }}
-    </div>
-
-    <div id="column3" style="float:left; margin:0; width:16%;">
-      {{ stat.pass_completions }}
-    </div>
-
-    <div id="column4" style="float:left; margin:0; width:16%;">
-      {{ stat.pass_yards }}
-    </div>
-
-    <div id="column5" style="float:left; margin:0; width:16%;">
-      {{ stat.pass_touchdowns }}
-    </div>
-
-    <div id="column6" style="float:left; margin:0; width:16%;">
-      {{ stat.interceptions }}
-    </div>
-
-
+    <tr>
+      <td>
+        {{ stat.game.game_date}}
+      </td>
+      <td>
+        {{ stat.game.opponent }}
+      </td>
+      <td>
+        {{ stat.pass_attempts }}
+      </td>
+      <td>
+        {{ stat.pass_completions}}
+      </td>
+      <td>
+        {{ stat.pass_yards }}
+      </td>
+      <td>
+        {{ stat.pass_touchdowns }}
+      </td>
+      <td>
+        {{ stat.interceptions }}
+      </td>
+    </tr>
   {% endfor %}
+</table>
 </div>

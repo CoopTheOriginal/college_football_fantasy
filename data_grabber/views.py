@@ -15,5 +15,5 @@ def index(request):
     return render(request, 'data_grabber/index.html', context)
 
 def detail(request, player_id):
-    player_data = PlayerData.objects.filter(player__pk=player_id)
+    player_data = PlayerData.objects.filter(player__pk=player_id).order_by('game__game_date')
     return render(request, 'data_grabber/detail.html', {'player_data': player_data})
