@@ -50,10 +50,11 @@ def player_name_cleanup(player):
 
 def game_date_cleanup(game_date):
     if '01/' in game_date:
-        game_date += '/' + datetime.datetime.now().year
+        game_date += '/' + str(datetime.datetime.now().year)
     else:
-        game_date += '/' + datetime.datetime.now().year - 1
-    return datetime.datetime.strptime(game_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        game_date += '/' + str(datetime.datetime.now().year - 1)
+    new_date = datetime.datetime.strptime(game_date, '%m/%d/%Y').date()
+    return new_date
 
 def quarterback_stat_lookup(player):
     print('player', player.name)
@@ -75,7 +76,7 @@ def quarterback_stat_lookup(player):
                                                            your_score=score[0],
                                                            opponent_score=score[1],
                                                            home=home_away,
-                                                           week=0)
+                                                           week=determine_week(game_date))
             if created:
                 player_stats = PlayerData(player=player,
                                           game=game_obj,
@@ -99,6 +100,20 @@ def lookup_player_stats(player_position):
 def score_breakout(score):
     return re.findall(r'\d+', score)
 
+def determine_week(a_date):
+    weeks = dict()
+    d7 = datetime.timedelta(days = 7)
+    iterDay = datetime.date(2014,8,26)
+    counter = 1
+    while iterDay <= datetime.date(2015, 1, 13):
+        end_date =  iterDay + d7
+        weeks[counter] = (iterDay, end_date)
+        iterDay += d7
+        counter += 1
+
+    for week, date_range in weeks.items():
+        if date_range[0] <= a_date <= date_range[1]:
+            return week
 
 def home_check(opponent_text):
     if '@' in opponent_text:
