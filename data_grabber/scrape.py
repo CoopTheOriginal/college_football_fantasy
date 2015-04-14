@@ -27,8 +27,8 @@ def initial_player_lookup(position='qb'):
     first_group = souped_page.find_all('tr', attrs={'class': 'row2'})
     second_group = souped_page.find_all('tr', attrs={'class': 'row1'})
     all_players = []
-    all_players.extend(first_group[:100])
-    all_players.extend(second_group[:100])
+    all_players.extend(first_group[:75])
+    all_players.extend(second_group[:75])
     for player in all_players:
         save_player_data(player, position)
 
@@ -48,6 +48,13 @@ def player_name_cleanup(player):
     player_name = player.name.replace('.', '')
     return player_name.replace(' ', '-')
 
+def game_date_cleanup(game_date):
+    if '01/' in game_date:
+        game_date += '/' + datetime.datetime.now().year
+    else:
+        game_date += '/' + datetime.datetime.now().year - 1
+    return datetime.datetime.strptime(game_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+
 def quarterback_stat_lookup(player):
     print('player', player.name)
     player_name = player_name_cleanup(player)
@@ -60,15 +67,15 @@ def quarterback_stat_lookup(player):
         for stat in all_stats[1:]:
             each_stat = stat.find_all('td')
             score = score_breakout(each_stat[2].text)
-            game_date = each_stat[0].text + '/2014'
-            game_date = datetime.datetime.strptime(game_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+            game_date = game_date_cleanup(each_stat[0].text)
             home_away, opp = home_check(each_stat[1].text)
             game_obj, created = Game.objects.get_or_create(team=player.team,
                                                            game_date=game_date,
                                                            opponent=opp,
                                                            your_score=score[0],
                                                            opponent_score=score[1],
-                                                           home=home_away)
+                                                           home=home_away,
+                                                           week=0)
             if created:
                 player_stats = PlayerData(player=player,
                                           game=game_obj,
