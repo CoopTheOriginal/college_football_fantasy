@@ -82,16 +82,6 @@ def quarterback_stat_lookup(player):
                                           rush_touchdowns=each_stat[13].text)
                 player_stats.save()
 
-def position_lookup(player_position):
-    if player_position == 'qb':
-        print(something)
-    elif player_position == 'rb':
-        print(something)
-    elif player_position == 'wr':
-        print(something)
-    return True
-
-
 def lookup_player_stats(player_position):
     all_players = Player.objects.filter(position=player_position)
     for player in all_players:
