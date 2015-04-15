@@ -87,7 +87,9 @@ def quarterback_stat_lookup(player):
                                           interceptions=each_stat[9].text,
                                           rush_attempts=each_stat[10].text,
                                           rush_yards=each_stat[11].text,
-                                          rush_touchdowns=each_stat[13].text)
+                                          rush_touchdowns=each_stat[13].text,
+                                          score=0)
+                espn_scoring_rules(player_stats)
                 player_stats.save()
 
 def lookup_player_stats(player_position):
@@ -120,3 +122,14 @@ def home_check(opponent_text):
         return False, opponent_text.replace('@', '')
     else:
         return True, opponent_text
+
+
+def espn_scoring_rules(a_player):
+    a_player.score += (6 * a_player.rush_touchdowns)
+    a_player.score += (4 * a_player.pass_touchdowns)
+    if a_player.rush_yards > 0:
+        a_player.score += (a_player.rush_yards // 10)
+    a_player.score += (a_player.pass_yards // 25)
+    a_player.score += (6 * a_player.rec_touchdowns)
+    a_player.save()
+    return a_player
