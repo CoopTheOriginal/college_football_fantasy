@@ -2,7 +2,7 @@ from .models import Player, Game, PlayerData
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import metrics
+from sklearn.metrics import accuracy_score
 from sklearn.cross_validation import cross_val_score
 
 
@@ -34,10 +34,10 @@ def create_class_array(player_list):
     class_answer = np.array([player_stat.score for player_stat in player_list])
     return class_input, class_answer
 
-def engine_scoring():
+def engine_validation_scoring():
     train_input, train_answer = create_class_array(PlayerData.objects.filter(game__week__lte=13))
     test_input, test_answer = create_class_array(PlayerData.objects.filter(game__week=14))
     rfc = RandomForestClassifier ()
-    rfc.fit(X=train_input, y=train_answer)
+    rfc.fit(train_input, train_answer)
     predicted = rfc.predict(test_input)
-    return metrics.f1_score(test_answer, predicted)
+    return accuracy_score(test_answer, predicted)
