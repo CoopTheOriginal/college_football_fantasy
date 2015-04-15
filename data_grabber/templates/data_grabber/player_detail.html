@@ -16,7 +16,7 @@
   </tr>
     <tr>
       <td>
-        Date
+        Week
       </td>
       <td>
          Opponent
@@ -49,7 +49,7 @@
   {% for stat in player_data %}
     <tr>
       <td>
-        <a href="{% url 'data_grabber:game_detail' stat.game.id %}">{{ stat.game.game_date}}</a>
+        <a href="{% url 'data_grabber:game_detail' stat.game.id %}">{{ stat.game.week}}</a>
       </td>
       <td>
         {{ stat.game.opponent }}

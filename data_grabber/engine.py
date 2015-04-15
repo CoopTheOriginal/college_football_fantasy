@@ -16,3 +16,7 @@ def post_engine():
 def espn_scoring_rules():
     # produces the score for the player each week
     return True
+
+def test_control_split():
+    # train model with weeks 1-13 and predict for week 14
+    return True
