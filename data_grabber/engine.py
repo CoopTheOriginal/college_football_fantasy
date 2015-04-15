@@ -1,5 +1,10 @@
 from .models import Player, Game, PlayerData
 
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
+from sklearn.cross_validation import cross_val_score
+
 
 def pre_engine():
     # creates classifiers necessary for engine.
@@ -16,3 +21,23 @@ def post_engine():
 def test_control_split():
     # train model with weeks 1-13 and predict for week 14
     return True
+
+def create_class_array(player_list):
+    class_input = np.array([[player_stat.pass_attempts,
+                             player_stat.pass_completions,
+                             player_stat.pass_yards,
+                             player_stat.pass_touchdowns,
+                             player_stat.interceptions,
+                             player_stat.rush_attempts,
+                             player_stat.rush_yards,
+                             player_stat.rush_touchdowns] for player_stat in player_list])
+    class_answer = np.array([player_stat.score for player_stat in player_list])
+    return class_input, class_answer
+
+def engine_scoring():
+    train_input, train_answer = create_class_array(PlayerData.objects.filter(game__week__lte=13))
+    test_input, test_answer = create_class_array(PlayerData.objects.filter(game__week=14))
+    rfc = RandomForestClassifier ()
+    rfc.fit(X=train_input, y=train_answer)
+    predicted = rfc.predict(test_input)
+    return metrics.f1_score(test_answer, predicted)
