@@ -45,6 +45,9 @@
       <td>
         Touchdowns
       </td>
+      <td>
+        ESPN Score
+      </td>
     </tr>
   {% for stat in player_data %}
     <tr>
@@ -77,6 +80,9 @@
       </td>
       <td>
         {{ stat.rush_touchdowns }}
+      </td>
+      <td>
+        {{ stat.score }}
       </td>
     </tr>
   {% endfor %}
