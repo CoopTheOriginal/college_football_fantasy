@@ -6,16 +6,19 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sbn
+from collections import namedtuple
 
 
-team_ids = team_to_int_dict()
 
 def team_to_int_dict():
     teams = list(Game.objects.all().values_list('team', flat=True).distinct())
     return {team:teams.index(team) for team in teams}
 
 
+
 def prep_model_input(player_list):
+    team_ids = team_to_int_dict()
+
     player_stats =  np.array([[team_ids[stat.game.team],
                                stat.game.home]
                                for stat in player_list])
@@ -26,7 +29,8 @@ def prep_model_input(player_list):
 def create_predictions(train_input, train_answer, test_input):
     rfc = RandomForestClassifier ()
     rfc.fit(train_input, train_answer)
-    return rfc.predict(test_input)
+    prediction_float = rfc.predict(test_input)
+    return [int(num) for num in prediction_float]
 
 
 def plot_pred_actual(player_stat, predicted, test_answer, player_labels):
@@ -78,13 +82,22 @@ def predict_players_live():
     train_players_dict = player_stat_arrays(train_players)
     test_players_dict = player_stat_arrays(test_players)
 
-    final_predictions = {'player_names':test_player_names}
+    final_player_pred_dict = {name:{} for name in test_player_names}
     for player_stat in train_players_dict.keys():
         predicted = create_predictions(train_input, train_players_dict[player_stat], test_input)
         accuracy = accuracy_score(test_players_dict[player_stat], predicted)
-        final_predictions[player_stat] = predicted
-    return final_predictions
+
+        for name, prediction in zip(test_player_names, predicted):
+            final_player_pred_dict[name][player_stat] = prediction
+    return final_player_pred_dict
 
 
 def post_engine(predict_dict):
-    for stat_name, value in predict_dict.items():
+    final_list =[]
+    for name, stats in predict_dict.items():
+        stats['name'] = name
+        final_list.append(stats)
+
+    player_predict = namedtuple('player_predict', final_list[0].keys())
+    obj_list = [player_predict(**player) for player in final_list]
+    return obj_list

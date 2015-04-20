@@ -19,9 +19,6 @@
         Player
       </td>
       <td>
-         Opponent
-      </td>
-      <td>
         Attempts
       </td>
       <td>
@@ -49,40 +46,37 @@
         ESPN Score
       </td>
     </tr>
-  {% for stat in player_data %}
+  {% for player in predictions %}
     <tr>
       <td>
-        {{ stat.player.name}}</a>
+        {{ player.name }}</a>
       </td>
       <td>
-        {{ stat.game.opponent }}
+        {{ player.pass_attempts }}
       </td>
       <td>
-        {{ stat.pass_attempts }}
+        {{ player.pass_completions}}
       </td>
       <td>
-        {{ stat.pass_completions}}
+        {{ player.pass_yards }}
       </td>
       <td>
-        {{ stat.pass_yards }}
+        {{ player.pass_touchdowns }}
       </td>
       <td>
-        {{ stat.pass_touchdowns }}
+        {{ player.interceptions }}
       </td>
       <td>
-        {{ stat.interceptions }}
+        {{ player.rush_attempts}}
       </td>
       <td>
-        {{ stat.rush_attempts}}
+        {{ player.rush_yards }}
       </td>
       <td>
-        {{ stat.rush_yards }}
+        {{ player.rush_touchdowns }}
       </td>
       <td>
-        {{ stat.rush_touchdowns }}
-      </td>
-      <td>
-        {{ stat.score }}
+        coming soon
       </td>
     </tr>
   {% endfor %}
