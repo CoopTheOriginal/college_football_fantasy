@@ -57,7 +57,7 @@ def player_stat_arrays(player_list):
     return final_dict
 
 
-def predict_players():
+def predict_players_backtest():
     train_players, test_players = get_train_test_players()
     train_input, train_player_names = prep_model_input(train_players)
     test_input, test_player_names = prep_model_input(test_players)
@@ -69,3 +69,22 @@ def predict_players():
         accuracy = accuracy_score(test_players_dict[player_stat], predicted)
         plot_pred_actual(player_stat, predicted, test_players_dict[player_stat], test_player_names)
         print('{} accuracy score = {}'.format(player_stat, accuracy))
+    return final_predictions
+
+def predict_players_live():
+    train_players, test_players = get_train_test_players()
+    train_input, train_player_names = prep_model_input(train_players)
+    test_input, test_player_names = prep_model_input(test_players)
+    train_players_dict = player_stat_arrays(train_players)
+    test_players_dict = player_stat_arrays(test_players)
+
+    final_predictions = {'player_names':test_player_names}
+    for player_stat in train_players_dict.keys():
+        predicted = create_predictions(train_input, train_players_dict[player_stat], test_input)
+        accuracy = accuracy_score(test_players_dict[player_stat], predicted)
+        final_predictions[player_stat] = predicted
+    return final_predictions
+
+
+def post_engine(predict_dict):
+    for stat_name, value in predict_dict.items():

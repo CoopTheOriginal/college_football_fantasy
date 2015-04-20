@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from .scrape import initial_player_lookup, lookup_player_stats
 from .models import Player, PlayerData, Game
+from .engine import predict_players_live
 
 
 def index(request):
@@ -23,5 +24,5 @@ def game_detail(request, game_id):
     return render(request, 'data_grabber/game_detail.html', {'game_data': game_data})
 
 def predictions(request):
-    predictions = 'hi'
+    predictions = predict_players_live()
     return render(request, 'data_grabber/predictions.html', predictions)
