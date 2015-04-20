@@ -44,7 +44,8 @@ class PlayerData(models.Model):
         return "Player_id: {}, Team: {}".format(self.player.pk, self.game.team)
 
     def to_dict(self):
-        del_list = ['score', '_game_cache', '_state', 'player_id', 'id', 'game_id']
+        del_list = ['score', '_game_cache', '_state', 'player_id',
+                    '_player_cache', 'id', 'game_id']
         clean_dict = self.__dict__.copy()
         for bad_attr in del_list:
             if bad_attr in clean_dict.keys():

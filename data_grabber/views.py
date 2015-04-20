@@ -21,3 +21,7 @@ def player_detail(request, player_id):
 def game_detail(request, game_id):
     game_data = Game.objects.filter(pk=game_id).order_by('game_date')
     return render(request, 'data_grabber/game_detail.html', {'game_data': game_data})
+
+def predictions(request):
+    predictions = 'hi'
+    return render(request, 'data_grabber/predictions.html', predictions)

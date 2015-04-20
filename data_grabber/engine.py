@@ -2,42 +2,70 @@ from .models import Player, Game, PlayerData
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 from sklearn.cross_validation import cross_val_score
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sbn
 
 
-def pre_engine():
-    # creates classifiers necessary for engine.
-    return True
+team_ids = team_to_int_dict()
 
-def engine():
-    # given the inputs, runs model to pick top player for the week
-    return True
+def team_to_int_dict():
+    teams = list(Game.objects.all().values_list('team', flat=True).distinct())
+    return {team:teams.index(team) for team in teams}
 
-def post_engine():
-    # takes chosen player and produces the necessary info to send to front-end view
-    return True
 
-def test_control_split():
-    # train model with weeks 1-13 and predict for week 14
-    return True
+def prep_model_input(player_list):
+    player_stats =  np.array([[team_ids[stat.game.team],
+                               stat.game.home]
+                               for stat in player_list])
+    player_names = [stat.player.name for stat in player_list]
+    return player_stats, player_names
 
-def create_class_array(player_list):
-    class_input = np.array([[player_stat.pass_attempts,
-                             player_stat.pass_completions,
-                             player_stat.pass_yards,
-                             player_stat.pass_touchdowns,
-                             player_stat.interceptions,
-                             player_stat.rush_attempts,
-                             player_stat.rush_yards,
-                             player_stat.rush_touchdowns] for player_stat in player_list])
-    class_answer = np.array([player_stat.score for player_stat in player_list])
-    return class_input, class_answer
 
-def engine_validation_scoring():
-    train_input, train_answer = create_class_array(PlayerData.objects.filter(game__week__lte=13))
-    test_input, test_answer = create_class_array(PlayerData.objects.filter(game__week=14))
+def create_predictions(train_input, train_answer, test_input):
     rfc = RandomForestClassifier ()
     rfc.fit(train_input, train_answer)
-    predicted = rfc.predict(test_input)
-    return accuracy_score(test_answer, predicted)
+    return rfc.predict(test_input)
+
+
+def plot_pred_actual(player_stat, predicted, test_answer, player_labels):
+    plt.figure(figsize=(13,7))
+    plt.title(player_stat)
+    plt.plot(test_answer, 'g', label='Actual')
+    plt.plot(predicted, 'r', label='Predicted')
+    label_length = range(len(player_labels))
+    plt.xticks(label_length, player_labels)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.show()
+
+
+def get_train_test_players():
+    train_players = PlayerData.objects.filter(game__week__lte=13)
+    test_players = PlayerData.objects.filter(game__week=14)
+    return train_players, test_players
+
+
+def player_stat_arrays(player_list):
+    final_dict = player_list[0].to_dict()
+    final_dict = {stat_name:np.array([]) for stat_name in final_dict.keys()}
+    for player in player_list:
+        player_dict = player.to_dict()
+        for stat in final_dict.keys():
+            new_list = np.append(final_dict[stat], [player_dict[stat]])
+            final_dict[stat] = new_list
+    return final_dict
+
+
+def predict_players():
+    train_players, test_players = get_train_test_players()
+    train_input, train_player_names = prep_model_input(train_players)
+    test_input, test_player_names = prep_model_input(test_players)
+    train_players_dict = player_stat_arrays(train_players)
+    test_players_dict = player_stat_arrays(test_players)
+
+    for player_stat in train_players_dict.keys():
+        predicted = create_predictions(train_input, train_players_dict[player_stat], test_input)
+        accuracy = accuracy_score(test_players_dict[player_stat], predicted)
+        plot_pred_actual(player_stat, predicted, test_players_dict[player_stat], test_player_names)
+        print('{} accuracy score = {}'.format(player_stat, accuracy))

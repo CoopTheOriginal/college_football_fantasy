@@ -1,0 +1,90 @@
+<div id="contentBox" style="margin:0px auto; width:70%">
+  <h1>{{ player.name }}</h1>
+</div>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<div id="contentBox" style="margin:0px auto; width:90%">
+<table>
+  <tr>
+    <td colspan='6' align='center'>
+      Passing
+    </td>
+    <td colspan='5' align='center'>
+      Rushing
+    </td>
+  </tr>
+    <tr>
+      <td>
+        Player
+      </td>
+      <td>
+         Opponent
+      </td>
+      <td>
+        Attempts
+      </td>
+      <td>
+        Completions
+      </td>
+      <td>
+        Yards
+      </td>
+      <td>
+        Touchdowns
+      </td>
+      <td>
+        Interceptions
+      </td>
+      <td>
+        Attempts
+      </td>
+      <td>
+        Yards
+      </td>
+      <td>
+        Touchdowns
+      </td>
+      <td>
+        ESPN Score
+      </td>
+    </tr>
+  {% for stat in player_data %}
+    <tr>
+      <td>
+        {{ stat.player.name}}</a>
+      </td>
+      <td>
+        {{ stat.game.opponent }}
+      </td>
+      <td>
+        {{ stat.pass_attempts }}
+      </td>
+      <td>
+        {{ stat.pass_completions}}
+      </td>
+      <td>
+        {{ stat.pass_yards }}
+      </td>
+      <td>
+        {{ stat.pass_touchdowns }}
+      </td>
+      <td>
+        {{ stat.interceptions }}
+      </td>
+      <td>
+        {{ stat.rush_attempts}}
+      </td>
+      <td>
+        {{ stat.rush_yards }}
+      </td>
+      <td>
+        {{ stat.rush_touchdowns }}
+      </td>
+      <td>
+        {{ stat.score }}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+</div>
