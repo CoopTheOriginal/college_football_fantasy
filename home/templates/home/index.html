@@ -1,9 +1,5 @@
 {% load staticfiles %}
 
-
-
-
-
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -23,7 +19,7 @@
 
     <div class="row">
       <div class="large-12 columns text-center">
-        <img src="{% static "home/images/College-Football-Map.jpg" %}" width='600'/>
+        <img src="{% static 'home/images/College-Football-Map.jpg' %}" width='600'/>
       </div>
     </div>
 
@@ -32,23 +28,26 @@
       	<div class="panel">
 	        <div class="row">
 	        	<div class="large-4 medium-4 columns">
-	    		<p><a href="/details"> 2014 Player Stats</a><br />See the raw data for 2014 for each player.</p>
-	    	</div>
+    	    		<p>
+                <a href="/details"> 2014 Player Stats</a>
+                <br />See the raw data for 2014 for each player.
+              </p>
+	    	    </div>
 	        	<div class="large-4 medium-4 columns">
-	        		<p><a href="/details/predictions">Current Week's Predictions</a><br />Each week we'll show the predicted scores for each player, so you can make a more informed pick.</p>
+	        		<p>
+                <a href="/details/predictions">Current Week's Predictions</a>
+                <br />Each week we'll show the predicted scores for each player, so you can make a more informed pick.
+              </p>
 	        	</div>
 	        	<div class="large-4 medium-4 columns">
-	        		<p><a href="/details">2015 Player Stats</a><br />See the raw data for 2015 for each player.</p>
+	        		<p>
+                <a href="/details">2015 Player Stats</a>
+                <br />See the raw data for 2015 for each player.
+              </p>
 	        	</div>
 					</div>
       	</div>
       </div>
     </div>
-
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
   </body>
 </html>
