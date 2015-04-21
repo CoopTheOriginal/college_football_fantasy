@@ -15,10 +15,8 @@ def team_to_int_dict():
     return {team:teams.index(team) for team in teams}
 
 
-
 def prep_model_input(player_list):
     team_ids = team_to_int_dict()
-
     player_stats =  np.array([[team_ids[stat.game.team],
                                stat.game.home]
                                for stat in player_list])
@@ -75,6 +73,7 @@ def predict_players_backtest():
         print('{} accuracy score = {}'.format(player_stat, accuracy))
     return final_predictions
 
+
 def predict_players_live():
     train_players, test_players = get_train_test_players()
     train_input, train_player_names = prep_model_input(train_players)
@@ -96,8 +95,19 @@ def post_engine(predict_dict):
     final_list =[]
     for name, stats in predict_dict.items():
         stats['name'] = name
+        stats['score'] = espn_scoring_pred(stats)
         final_list.append(stats)
-
     player_predict = namedtuple('player_predict', final_list[0].keys())
-    obj_list = [player_predict(**player) for player in final_list]
-    return obj_list
+    player_obj = [player_predict(**player) for player in final_list]
+    return sorted(player_obj, key=lambda x : x.score, reverse=True)
+
+
+def espn_scoring_pred(a_player_dict):
+    score = 0
+    score += (6 * a_player_dict['rush_touchdowns'])
+    score += (4 * a_player_dict['pass_touchdowns'])
+    if a_player_dict['rush_yards'] > 0:
+        score += (a_player_dict['rush_yards'] // 10)
+    score += (a_player_dict['pass_yards'] // 25)
+    score += (6 * a_player_dict['rec_touchdowns'])
+    return score

@@ -1,7 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.views import generic
-from django.core.urlresolvers import reverse
+from django.shortcuts import render
 
 
 from .scrape import initial_player_lookup, lookup_player_stats
@@ -9,11 +7,11 @@ from .models import Player, PlayerData, Game
 from .engine import predict_players_live, post_engine
 
 
-def index(request):
+def players(request):
     context = {'players': Player.objects.all()}
     #initial_player_lookup()
     #lookup_player_stats('qb')
-    return render(request, 'data_grabber/index.html', context)
+    return render(request, 'data_grabber/players.html', context)
 
 def player_detail(request, player_id):
     player_data = PlayerData.objects.filter(player__pk=player_id).order_by('game__game_date')
