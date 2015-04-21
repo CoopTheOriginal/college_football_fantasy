@@ -13,37 +13,32 @@
     <link rel="stylesheet" type="text/css" href="{% static 'home/css/foundation.css' %}" />
     <script src="{% static 'home/js/vendor/modernizr.js' %}"></script>
   </head>
-  <body>
 
+  <body>
     <div class="row">
       <div class="large-12 columns">
-        <h1>College Football Information</h1>
+        <h1>College Football Fantasy</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns text-center">
+        <img src="{% static "home/images/College-Football-Map.jpg" %}" width='600'/>
       </div>
     </div>
 
     <div class="row">
       <div class="large-12 columns">
       	<div class="panel">
-
-
-
-          <img src="{% static "home/images/College-Football-Map.jpg" %}">
-
-
-
-
-	        <h3>We&rsquo;re stoked you want to try Foundation! </h3>
-	        <p>To get going, this file (index.html) includes some basic styles you can modify, play around with, or totally destroy to get going.</p>
-	        <p>Once you've exhausted the fun in this document, you should check out:</p>
 	        <div class="row">
 	        	<div class="large-4 medium-4 columns">
-	    		<p><a href="http://foundation.zurb.com/docs">Foundation Documentation</a><br />Everything you need to know about using the framework.</p>
+	    		<p><a href="/details"> 2014 Player Stats</a><br />See the raw data for 2014 for each player.</p>
 	    	</div>
 	        	<div class="large-4 medium-4 columns">
-	        		<p><a href="http://github.com/zurb/foundation">Foundation on Github</a><br />Latest code, issue reports, feature requests and more.</p>
+	        		<p><a href="/details/predictions">Current Week's Predictions</a><br />Each week we'll show the predicted scores for each player, so you can make a more informed pick.</p>
 	        	</div>
 	        	<div class="large-4 medium-4 columns">
-	        		<p><a href="http://twitter.com/foundationzurb">@foundationzurb</a><br />Ping us on Twitter if you have questions. If you build something with this we'd love to see it (and send you a totally boss sticker).</p>
+	        		<p><a href="/details">2015 Player Stats</a><br />See the raw data for 2015 for each player.</p>
 	        	</div>
 					</div>
       	</div>
