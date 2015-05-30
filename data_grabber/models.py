@@ -15,8 +15,8 @@ class Game(models.Model):
     team = models.CharField(max_length=100)
     game_date = models.DateField()
     opponent = models.CharField(max_length=100)
-    your_score = models.IntegerField()
-    opponent_score = models.IntegerField()
+    your_score = models.IntegerField(null=True)
+    opponent_score = models.IntegerField(null=True)
     home = models.BooleanField()
     week = models.IntegerField()
 
@@ -39,6 +39,7 @@ class PlayerData(models.Model):
     rec_touchdowns = models.IntegerField(default=0)
     receptions = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
+    predicted = models.IntegerField(default=0)
 
     def __repr__(self):
         return "Player_id: {}, Team: {}".format(self.player.pk, self.game.team)

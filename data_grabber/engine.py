@@ -92,14 +92,14 @@ def predict_players_live():
 
 
 def post_engine(predict_dict):
-    final_list =[]
+    final_list = []
     for name, stats in predict_dict.items():
         stats['name'] = name
         stats['score'] = espn_scoring_pred(stats)
         final_list.append(stats)
     player_predict = namedtuple('player_predict', final_list[0].keys())
-    player_obj = [player_predict(**player) for player in final_list]
-    return sorted(player_obj, key=lambda x : x.score, reverse=True)
+    player_obj_list = [player_predict(**player) for player in final_list]
+    return sorted(player_obj_list, key=lambda x : x.score, reverse=True)
 
 
 def espn_scoring_pred(a_player_dict):
