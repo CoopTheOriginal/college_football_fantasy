@@ -125,11 +125,12 @@ def home_check(opponent_text):
 
 
 def espn_scoring_rules(a_player):
-    a_player.score += (6 * a_player.rush_touchdowns)
-    a_player.score += (4 * a_player.pass_touchdowns)
-    if a_player.rush_yards > 0:
-        a_player.score += (a_player.rush_yards // 10)
-    a_player.score += (a_player.pass_yards // 25)
-    a_player.score += (6 * a_player.rec_touchdowns)
+    print(a_player.rush_touchdowns)
+    a_player.score += (6 * int(a_player.rush_touchdowns))
+    a_player.score += (4 * int(a_player.pass_touchdowns))
+    if int(a_player.rush_yards) > 0:
+        a_player.score += (int(a_player.rush_yards) // 10)
+    a_player.score += (int(a_player.pass_yards) // 25)
+    a_player.score += (6 * int(a_player.rec_touchdowns))
     a_player.save()
     return a_player

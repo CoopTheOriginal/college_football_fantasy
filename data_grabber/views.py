@@ -9,8 +9,8 @@ from .engine import predict_players_live, post_engine
 
 def players(request):
     context = {'players': Player.objects.all()}
-    #initial_player_lookup()
-    #lookup_player_stats('qb')
+    # initial_player_lookup()
+    # lookup_player_stats('qb')
     return render(request, 'data_grabber/players.html', context)
 
 def player_detail(request, player_id):
@@ -22,6 +22,6 @@ def game_detail(request, game_id):
     return render(request, 'data_grabber/game_detail.html', {'game_data': game_data})
 
 def predictions(request):
-    raw_preds = predict_players_live()
-    final_preds = post_engine(raw_preds)
+    raw_preds = predict_players_live(14)
+    final_preds = post_engine(raw_preds, 14)
     return render(request, 'data_grabber/predictions.html', {'predictions': final_preds})

@@ -8,7 +8,7 @@ class Player(models.Model):
     ext_id = models.IntegerField()
 
     def __repr__(self):
-        return "Name: {}".format(self.name)
+        return "<Name: {}>".format(self.name)
 
 
 class Game(models.Model):
@@ -21,7 +21,7 @@ class Game(models.Model):
     week = models.IntegerField()
 
     def __repr__(self):
-        return "Team: {}".format(self.team)
+        return "<Team: {}>".format(self.team)
 
 
 class PlayerData(models.Model):

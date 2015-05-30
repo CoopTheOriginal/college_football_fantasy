@@ -46,37 +46,37 @@
         ESPN Score
       </td>
     </tr>
-  {% for player in predictions %}
+  {% for playerdata in predictions %}
     <tr>
       <td>
-        {{ player.name }}</a>
+        <a href="{% url 'data_grabber:player_detail' playerdata.player.id %}">{{ playerdata.player.name }}</a>
       </td>
       <td>
-        {{ player.pass_attempts }}
+        {{ playerdata.pass_attempts }}
       </td>
       <td>
-        {{ player.pass_completions}}
+        {{ playerdata.pass_completions}}
       </td>
       <td>
-        {{ player.pass_yards }}
+        {{ playerdata.pass_yards }}
       </td>
       <td>
-        {{ player.pass_touchdowns }}
+        {{ playerdata.pass_touchdowns }}
       </td>
       <td>
-        {{ player.interceptions }}
+        {{ playerdata.interceptions }}
       </td>
       <td>
-        {{ player.rush_attempts}}
+        {{ playerdata.rush_attempts}}
       </td>
       <td>
-        {{ player.rush_yards }}
+        {{ playerdata.rush_yards }}
       </td>
       <td>
-        {{ player.rush_touchdowns }}
+        {{ playerdata.rush_touchdowns }}
       </td>
       <td>
-        {{ player.score }}
+        {{ playerdata.predicted }}
       </td>
     </tr>
   {% endfor %}

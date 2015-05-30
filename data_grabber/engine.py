@@ -42,9 +42,9 @@ def plot_pred_actual(player_stat, predicted, test_answer, player_labels):
     plt.show()
 
 
-def get_train_test_players():
+def get_train_test_players(week):
     train_players = PlayerData.objects.filter(game__week__lte=13)
-    test_players = PlayerData.objects.filter(game__week=14)
+    test_players = PlayerData.objects.filter(game__week=week)
     return train_players, test_players
 
 
@@ -74,8 +74,8 @@ def predict_players_backtest():
     return final_predictions
 
 
-def predict_players_live():
-    train_players, test_players = get_train_test_players()
+def predict_players_live(week):
+    train_players, test_players = get_train_test_players(week)
     train_input, train_player_names = prep_model_input(train_players)
     test_input, test_player_names = prep_model_input(test_players)
     train_players_dict = player_stat_arrays(train_players)
@@ -91,15 +91,19 @@ def predict_players_live():
     return final_player_pred_dict
 
 
-def post_engine(predict_dict):
+def post_engine(predict_dict, week):
     final_list = []
+
     for name, stats in predict_dict.items():
-        stats['name'] = name
-        stats['score'] = espn_scoring_pred(stats)
-        final_list.append(stats)
-    player_predict = namedtuple('player_predict', final_list[0].keys())
-    player_obj_list = [player_predict(**player) for player in final_list]
-    return sorted(player_obj_list, key=lambda x : x.score, reverse=True)
+        player = Player.objects.get(name=name)
+        game = Game.objects.get(week=week, team=player.team)
+        stats['predicted'] = espn_scoring_pred(stats)
+        plyrdata_obj, created = PlayerData.objects.update_or_create(player=player,
+                                                                    game=game,
+                                                                    predicted__gte=1,
+                                                                    defaults=stats)
+        final_list.append(plyrdata_obj)
+    return sorted(final_list, key=lambda x : x.predicted, reverse=True)
 
 
 def espn_scoring_pred(a_player_dict):
