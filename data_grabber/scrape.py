@@ -13,15 +13,15 @@ def url_request(partial_path):
     server.endheaders()
     reply = server.getresponse()
     if reply.status != 200:
-        return 'Error sending request {0} {1}'.format(reply.status, reply.reason)
+        return 'Error sending request {0} {1}'.format(reply.status,
+                                                      reply.reason)
     else:
         soup_object = BeautifulSoup(reply.read())
         reply.close()
         return soup_object
 
-def initial_player_lookup(position='qb'):
-    position_url = {'qb':'PTDS', 'rb':'RYDS', 'wr':'RECTDS'}
-    position_path = 'stats/leaders/sortableTable/NCAAF/' + position_url[position] + \
+def populate_players(position, year):
+    position_path = 'stats/playersort/NCAAF/' + position + \
                                             '/regularseason?&print_rows=9999'
     souped_page = url_request(position_path)
     first_group = souped_page.find_all('tr', attrs={'class': 'row2'})
@@ -30,19 +30,19 @@ def initial_player_lookup(position='qb'):
     all_players.extend(first_group[:75])
     all_players.extend(second_group[:75])
     for player in all_players:
-        save_player_data(player, position)
+        save_player_data(player, position, year)
 
 
-def save_player_data(bs_chunk, position):
+def save_player_data(bs_chunk, position, year):
     ext_id = re.sub(r'\D', "", bs_chunk.find('a')['href'])
-    if not Player.objects.filter(ext_id=ext_id):
-        each_player = bs_chunk.find_all('td')
-        new = Player(ext_id=ext_id,
-                     name=each_player[1].text,
-                     team=each_player[2].text,
-                     position=position,
-                     year=2014)
-        new.save()
+    each_player = bs_chunk.find_all('td')
+    team = each_player[1].text
+    if team == '': team = 'not listed'
+    Player.objects.get_or_create(ext_id=ext_id,
+                                 name=each_player[0].text,
+                                 team=team,
+                                 position=position,
+                                 year=year)
 
 def player_name_cleanup(player):
     player_name = player.name.replace('.', '')
@@ -59,7 +59,8 @@ def game_date_cleanup(game_date):
 def quarterback_stat_lookup(player):
     print('player', player.name)
     player_name = player_name_cleanup(player)
-    souped_page = url_request('players/playerpage/' + str(player.ext_id) + '/' + player_name)
+    souped_page = url_request('players/playerpage/' + str(player.ext_id) \
+                              + '/' + player_name)
     souped_page = souped_page.find('table', attrs={'class': 'borderTop'})
     if souped_page.find_all(text='Passing'):
         all_stats = souped_page.find_all('tr', attrs={'class': 'row1'})

@@ -1,16 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-
-from .scrape import initial_player_lookup, lookup_player_stats
+from .scrape import populate_players, lookup_player_stats
 from .models import Player, PlayerData, Game
 from .engine import predict_players_live, post_engine
 
 
 def players(request):
     context = {'players': Player.objects.all()}
-    # initial_player_lookup()
-    # lookup_player_stats('qb')
+
+    populate_players('WR', 2016)
+    # lookup_player_stats('QB')
     return render(request, 'data_grabber/players.html', context)
 
 def player_detail(request, player_id):
