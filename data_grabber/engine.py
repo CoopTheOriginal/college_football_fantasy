@@ -97,7 +97,7 @@ def post_engine(predict_dict, week):
     for name, stats in predict_dict.items():
         player = Player.objects.get(name=name)
         game = Game.objects.get(week=week, team=player.team)
-        stats['predicted'] = espn_scoring_pred(stats)
+        stats['predicted'] = scoring_rules_player(stats)
         plyrdata_obj, created = PlayerData.objects.update_or_create(player=player,
                                                                     game=game,
                                                                     predicted__gte=1,
@@ -106,7 +106,19 @@ def post_engine(predict_dict, week):
     return sorted(final_list, key=lambda x : x.predicted, reverse=True)
 
 
-def espn_scoring_pred(a_player_dict):
+def scoring_rules_main(a_player_dict):
+    """Master checker for determining a player dictionary's score"""
+    if a_player_dict['position'] == 'K':
+        return scoring_rules_kicker(a_player_dict)
+    elif a_player_dict['position'] == 'DEF':
+        return scoring_rules_defense(a_player_dict)
+    else:
+        return scoring_rules_player(a_player_dict)
+
+def scoring_rules_player(a_player_dict):
+    """Takes in a dictionary of a player's (specifically a qb, wr,
+    and/or rb) performance and returns the score for that player as
+    defined by the rules"""
     score = 0
     score += (6 * a_player_dict['rush_touchdowns'])
     score += (4 * a_player_dict['pass_touchdowns'])
@@ -114,4 +126,22 @@ def espn_scoring_pred(a_player_dict):
         score += (a_player_dict['rush_yards'] // 10)
     score += (a_player_dict['pass_yards'] // 25)
     score += (6 * a_player_dict['rec_touchdowns'])
+    return score
+
+def scoring_rules_kicker(a_player_dict):
+    """Takes in a dictionary of a kicker's performance and returns the
+    score for the kicker as defined by the rules"""
+    score = 0
+    score += (1 * a_player_dict['1-19'])
+    score += (2 * a_player_dict['20-29'])
+    score += (3 * a_player_dict['30-39'])
+    score += (4 * a_player_dict['40-49'])
+    score += (5 * a_player_dict['50+'])
+    score += (1 * a_player_dict['XP'])
+    return score
+
+def scoring_rules_defense(a_player_dict):
+    """Takes in a dictionary of a defense's performance and returns the
+    score for the defense as defined by the rules"""
+    score = 0
     return score
