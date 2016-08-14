@@ -19,6 +19,7 @@ class Game(models.Model):
     opponent_score = models.IntegerField(null=True)
     home = models.BooleanField()
     week = models.IntegerField()
+    season = models.IntegerField()
 
     def __repr__(self):
         return "<Team: {}>".format(self.team)
