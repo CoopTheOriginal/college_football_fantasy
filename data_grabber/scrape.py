@@ -1,11 +1,11 @@
-import http.client
+import http.client, re
 from bs4 import BeautifulSoup
+from .helper_functions_scrape import *
 from .models import Player, Game, PlayerData
-import re
-import datetime
 
 
-SEASON_START = datetime.date(2015,9,2)
+
+
 
 def url_request(partial_path):
     path = '/collegefootball/' + partial_path
@@ -62,24 +62,9 @@ def save_player_data(bs_chunk, position, year):
                                  year=year)
 
 
-
-def game_date_cleanup(game_date):
-    if '01/' in game_date:
-        game_date += '/' + str(datetime.datetime.now().year)
-    else:
-        game_date += '/' + str(datetime.datetime.now().year - 1)
-    new_date = datetime.datetime.strptime(game_date, '%m/%d/%Y').date()
-    return new_date
-
-
 def quarterback_stat_lookup(player):
 
-    def player_name_prep():
-        """Preps player.name for URL request"""
-        player_name = player.name.replace('.', '')
-        return player_name.replace(' ', '-')
-
-    player_name = player_name_prep()
+    player_name = player_name_prep(player.name)
     print('player', player_name)
     souped_page = url_request('players/playerpage/' + str(player.ext_id) \
                               + '/' + player_name)
@@ -93,7 +78,6 @@ def quarterback_stat_lookup(player):
             score = score_breakout(each_stat[2].text)
             game_date = game_date_cleanup(each_stat[0].text)
             home_away, opp = home_check(each_stat[1].text)
-            print('week: ', determine_week(game_date))
             game_obj, created = Game.objects.get_or_create(team=player.team,
                                                            game_date=game_date,
                                                            opponent=opp,
@@ -123,40 +107,6 @@ def lookup_player_stats(player_position):
     for player in all_players:
         if not PlayerData.objects.filter(player=player):
             quarterback_stat_lookup(player)
-
-
-def score_breakout(score):
-    return re.findall(r'\d+', score)
-
-
-def determine_week(a_date):
-    """Returns the week in the college football season that the 'a_date'
-    took place."""
-    def week_dict():
-        """Generates a dictionary defining the start and end date of each
-        week for the season."""
-        weeks = {}
-        d7 = datetime.timedelta(days=7)
-        iterDay = SEASON_START
-        counter = 1
-        while iterDay <= datetime.datetime.now().date():
-            end_date =  iterDay + d7
-            weeks[counter] = (iterDay, end_date)
-            iterDay += d7
-            counter += 1
-        return weeks
-
-    weeks = week_dict()
-    for week, date_range in weeks.items():
-        if date_range[0] <= a_date <= date_range[1]:
-            return week
-
-
-def home_check(opponent_text):
-    if '@' in opponent_text:
-        return False, opponent_text.replace('@', '')
-    else:
-        return True, opponent_text
 
 
 def scoring_rules_main(a_player_obj):
