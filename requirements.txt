@@ -25,3 +25,4 @@ seaborn==0.5.1
 six==1.9.0
 terminado==0.5
 tornado==4.1
+toolz==0.7.4
