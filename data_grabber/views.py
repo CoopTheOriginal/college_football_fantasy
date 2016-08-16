@@ -10,9 +10,9 @@ def players(request):
     context = {'players': Player.objects.all()}
 
     ## Populates and/or updates the list of players/kickers/defenses
-    main_populate_all(2016)
+    # main_populate_all(2016)
     ## Collects and stores latest stats for all players
-    # lookup_player_stats('QB')
+    lookup_player_stats('K')
     return render(request, 'data_grabber/players.html', context)
 
 def player_detail(request, player_id):

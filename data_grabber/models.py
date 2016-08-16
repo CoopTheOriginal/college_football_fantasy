@@ -41,6 +41,8 @@ class PlayerData(models.Model):
     receptions = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
     predicted = models.IntegerField(default=0)
+    extra_point_kick = models.IntegerField(default=0)
+    three_point_kick = models.IntegerField(default=0)
 
     def __repr__(self):
         return "Player_id: {}, Team: {}".format(self.player.pk, self.game.team)

@@ -91,8 +91,15 @@ def create_game_obj(each_stat_list, team):
 
 
 def position_stat_breakout(each_stat_list, position):
-    """Takes in a list of tds and returns dict of what stats belong to
-    which values"""
+    """Takes in a list of tds from BeautifulSoup and returns dict of
+    what stats belong to which values"""
+
+    def kicker_stat_prep(kicker_stat):
+        """Breaks out stats where it goes "number-number", into dictionary
+        with 'made' and 'total'"""
+        numbers = kicker_stat.split('-')
+        return {'made': int(numbers[0]), 'total': int(numbers[1])}
+
     if position == 'QB':
         stat_dict = {"pass_attempts": int(each_stat_list[3].text),
                      "pass_completions": int(each_stat_list[4].text),
@@ -101,14 +108,31 @@ def position_stat_breakout(each_stat_list, position):
                      "interceptions": int(each_stat_list[9].text),
                      "rush_attempts": int(each_stat_list[10].text),
                      "rush_yards": int(each_stat_list[11].text),
-                     "rush_touchdowns": int(each_stat_list[13].text)}
+                     "rush_touchdowns": int(each_stat_list[13].text)
+                     }
     elif position == 'RB':
-        stat_dict = {"rush_attempts": int(each_stat_list[10].text),
-                     "rush_yards": int(each_stat_list[11].text),
-                     "rush_touchdowns": int(each_stat_list[13].text)}
-
+        stat_dict = {"rush_attempts": int(each_stat_list[3].text),
+                     "rush_yards": int(each_stat_list[4].text),
+                     "rush_touchdowns": int(each_stat_list[6].text),
+                     "receptions": int(each_stat_list[7].text),
+                     "rec_yards": int(each_stat_list[8].text),
+                     "rec_touchdowns": int(each_stat_list[10].text)
+                     }
+    elif position == 'WR':
+        stat_dict = {"receptions": int(each_stat_list[3].text),
+                     "rec_yards": int(each_stat_list[4].text),
+                     "rec_touchdowns": int(each_stat_list[6].text),
+                     "rush_attempts": int(each_stat_list[7].text),
+                     "rush_yards": int(each_stat_list[8].text),
+                     "rush_touchdowns": int(each_stat_list[10].text)
+                     }
+    elif position == 'K':
+        extra_point_kick = kicker_stat_prep(each_stat_list[11].text)
+        three_point_kick = kicker_stat_prep(each_stat_list[3].text)
+        stat_dict = {"extra_point_kick": extra_point_kick['made'],
+                     "three_point_kick": three_point_kick['made']
+                     }
     return stat_dict
-
 
 
 def player_lookup_main(player):
@@ -145,24 +169,22 @@ def scoring_rules_main(a_player_dict, position):
         defined by the rules"""
         score = 0
         score += (6 * a_player_dict['rush_touchdowns'])
-        score += (4 * a_player_dict['pass_touchdowns'])
         if a_player_dict['rush_yards'] > 0:
             score += (a_player_dict['rush_yards'] // 10)
-        score += (a_player_dict['pass_yards'] // 25)
-        if position != 'QB':
+        if position == 'QB':
+            score += (4 * a_player_dict['pass_touchdowns'])
+            score += (a_player_dict['pass_yards'] // 25)
+        else:
             score += (6 * a_player_dict['rec_touchdowns'])
+            score += (a_player_dict['rec_yards'] // 10)
         return score
 
     def scoring_rules_kicker():
         """Takes in a dictionary of a kicker's performance and returns the
         score for the kicker as defined by the rules"""
         score = 0
-        score += (1 * a_player_dict['1-19'])
-        score += (2 * a_player_dict['20-29'])
-        score += (3 * a_player_dict['30-39'])
-        score += (4 * a_player_dict['40-49'])
-        score += (5 * a_player_dict['50+'])
-        score += (1 * a_player_dict['XP'])
+        score += (1 * a_player_dict['extra_point_kick'])
+        score += (3 * a_player_dict['three_point_kick'])
         return score
 
     def scoring_rules_defense():
