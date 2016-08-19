@@ -1,6 +1,56 @@
-# College Fantasy Football Predictor
-The goal of this application is to provide a one stop shop for all your college football fantasy needs. For those of you who don't even know what I'm talking about, please see this website - http://games.espn.go.com/college-football-challenge/2014/en/
+# Weekly College Fantasy
 
-I'm what some may call a fanatic when it comes to this game. For a while now, I've chosen players based on certain inputs and I'm hoping with this application that those inputs can be quantified to provide the ultimate predictor each week for choosing players.
 
-This application is written in Python and Django
+Quickstart
+----------
+
+Run the following commands to bootstrap your environment.
+
+
+```
+cd weekly_college_fantasy
+pip install -r requirements.txt
+python manage.py db init
+python manage.py server
+```
+
+
+Deployment
+----------
+
+In your production environment, make sure you have an application.cfg
+file in your instance directory.
+
+
+Shell
+-----
+
+To open the interactive shell, run:
+
+    python manage.py shell
+
+By default, you will have access to `app` and `db`.
+
+
+Running Tests
+-------------
+
+To run all tests, run:
+
+    python manage.py test
+
+
+Migrations
+----------
+
+Whenever a database migration needs to be made, run the following commmand:
+
+        python manage.py db migrate
+
+This will generate a new migration script. Then run:
+
+        python manage.py db upgrade
+
+to apply the migration.
+
+For a full migration command reference, run `python manage.py db --help`.

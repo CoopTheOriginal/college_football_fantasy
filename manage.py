@@ -1,10 +1,29 @@
 #!/usr/bin/env python
 import os
-import sys
 
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "college_football_fantasy.settings.prod")
+from flask.ext.script import Manager, Shell, Server
+from flask.ext.migrate import MigrateCommand
+from flask.ext.script.commands import ShowUrls, Clean
 
-    from django.core.management import execute_from_command_line
+from weekly_college_fantasy import create_app, db
 
-    execute_from_command_line(sys.argv)
+
+app = create_app()
+manager = Manager(app)
+manager.add_command('server', Server())
+manager.add_command('db', MigrateCommand)
+manager.add_command('show-urls', ShowUrls())
+manager.add_command('clean', Clean())
+
+
+@manager.shell
+def make_shell_context():
+    """ Creates a python REPL with several default imports
+        in the context of the app
+    """
+
+    return dict(app=app, db=db)
+
+
+if __name__ == '__main__':
+    manager.run()

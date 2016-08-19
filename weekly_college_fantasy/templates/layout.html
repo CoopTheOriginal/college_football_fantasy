@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly College Fantasy</title>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='normalize.css') }}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='foundation.css') }}" />
+<link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+
+<body>
+
+<div class="row">
+  <div class="large-3 columns">
+    <h1><img src="http://placehold.it/400x100&text=Logo"/></h1>
+  </div>
+  <div class="large-9 columns">
+    <ul class="inline-list right">
+      <li><a href="#">How To Play</a></li>
+      <li><a href="/details">View All Player's Info</a></li>
+      <li><a href="#">Join a Group</a></li>
+      <li><a href="#">Register Today</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="large-3 columns">
+    <ul class="side-nav">
+      <li>
+        {% if not session.logged_in %}
+          <a href="/login">log in</a>
+          <!-- <a href="/login">Register/Sign In</a> -->
+        {% else %}
+          <a href="/logout">log out</a>
+        {% endif %}
+      <li><a href="#">Global Rankings</a></li>
+      <li><a href="#">Your Groups</a></li>
+      <li><a href="#">Your Picks</a></li>
+    </ul>
+    <p><img src="http://placehold.it/320x240&text=Ad"/></p>
+  </div>
+
+{% block body %}
+{% endblock %}
+
+
+
+</div>
+
+<footer class="row">
+<div class="large-12 columns">
+<hr/>
+<div class="row">
+<div class="large-6 columns">
+<p>&copy; Copyright Weekly College Fantasy</p>
+</div>
+<div class="large-6 columns">
+<ul class="inline-list right">
+  <li><a href="#">About Us</a></li>
+  <li><a href="#">Report Issue</a></li>
+  <li><a href="#">Twitter</a></li>
+  <li><a href="#">Contact Form</a></li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+<script type="text/javascript" href="{{ url_for('static', filename='modernizr.js') }}"></script>
+<script type="text/javascript" href="{{ url_for('static', filename='main.js') }}"></script>
+<script>$(document).foundation();</script>
+</body>
+</html>
