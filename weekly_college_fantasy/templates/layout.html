@@ -25,8 +25,14 @@
     <ul class="inline-list right">
       <li><a href="#">How To Play</a></li>
       <li><a href="/details">View All Player's Info</a></li>
-      <li><a href="#">Join a Group</a></li>
-      <li><a href="#">Register Today</a></li>
+      <li><a href="/groups">Join a Group</a></li>
+      <li>
+        {% if not session.logged_in %}
+          <a href="/login">Register/LogIn</a>
+        {% else %}
+          <a href="/logout">log out</a>
+        {% endif %}
+      </li>
     </ul>
   </div>
 </div>
@@ -37,13 +43,12 @@
     <ul class="side-nav">
       <li>
         {% if not session.logged_in %}
-          <a href="/login">log in</a>
-          <!-- <a href="/login">Register/Sign In</a> -->
+          <a href="/login">Register/LogIn</a>
         {% else %}
-          <a href="/logout">log out</a>
+          <a href="#">Your Picks</a>
         {% endif %}
       <li><a href="#">Global Rankings</a></li>
-      <li><a href="#">Your Groups</a></li>
+      <li><a href="/groups">Your Groups</a></li>
       <li><a href="#">Your Picks</a></li>
     </ul>
     <p><img src="http://placehold.it/320x240&text=Ad"/></p>

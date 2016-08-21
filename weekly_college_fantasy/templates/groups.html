@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div>
+  Insert Search Bar Here
+</div>
+<div id="contentBox" style="margin:0px auto; width:90%">
+  <table>
+      <tr>
+        <td>
+          Group Name
+        </td>
+        <td>
+           Participants
+        </td>
+        <td>
+          Public
+        </td>
+      </tr>
+
+    {% for group in groups %}
+      <tr>
+        <td>
+          <a href="{{ url_for('.ind_group', group_id=group.id) }}">{{ group.name }}</a>
+        </td>
+        <td>
+          {{ group.participants }}
+        </td>
+        <td>
+          {{ group.public }}
+        </td>
+      </tr>
+    {% endfor %}
+
+  </table>
+</div>
+{% endblock %}

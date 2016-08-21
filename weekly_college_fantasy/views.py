@@ -1,9 +1,10 @@
 from flask import Blueprint, flash, render_template
-from .forms import LoginForm, RegistrationForm
 from flask.ext.login import login_user, logout_user
 from flask.ext.login import login_required, current_user
 
+from .forms import LoginForm, RegistrationForm
 from .scrape import main_populate_all, lookup_all_player_stats
+from .models import User
 
 weekly_college_fantasy = Blueprint("weekly_college_fantasy", __name__)
 
@@ -13,19 +14,25 @@ def index():
     ## Populates and/or updates the list of players/kickers/defenses
     #main_populate_all(2016)
     ## Collects and stores latest stats for all players
-    lookup_all_player_stats('RB')
+    #lookup_all_player_stats('QB')
     return render_template('index.html')
 
-@weekly_college_fantasy.route("/players")
-def players():
 
-    player_data = [1,2,3]
-    return render_template('players.html', player_data=player_data)
+@weekly_college_fantasy.route("/groups")
+def groups():
+    groups = [{"name": 'winning group', "participants": 10, "public": 'yes', 'id': 1}]
+    return render_template('groups.html', groups=groups)
+
+
+@weekly_college_fantasy.route("/groups/<group_id>")
+def ind_group(group_id):
+    groups = [1,2,3]
+    return render_template('ind_group.html')
 
 
 @weekly_college_fantasy.route("/game/<game_id>")
 def game_detail(request, game_id):
-    #game_data = Game.objects.filter(pk=game_id).order_by('game_date')
+    #game_data = Game.query.filter(id=game_id).order_by('game_date')
     game_data = [1,2,3,4]
     return render(request, 'game_detail.html', {'game_data': game_data})
 

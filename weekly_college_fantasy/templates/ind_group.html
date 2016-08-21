@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="large-9 columns">
+    <fieldset>
+      <legend>Group Name</legend>
+
+        {% if get_flashed_messages() %}
+            {% for message in get_flashed_messages() %}
+            <div data-alert class="alert-box">
+              {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+      
+    </fieldset>
+  </div>
+{% endblock %}

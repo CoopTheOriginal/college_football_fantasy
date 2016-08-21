@@ -1,6 +1,41 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+    <div class="large-9 columns">
+      <fieldset>
+          <legend>Register</legend>
+          <form>
+            <div class="row collapse">
+              <div class="small-2  columns">
+                <span class="prefix"><i class="fi-torso-female"></i></span>
+              </div>
+              <div class="small-10  columns">
+                <input type="text" placeholder="Username">
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="small-2 columns">
+                <span class="prefix"><i class="fi-mail"></i></span>
+              </div>
+              <div class="small-10  columns">
+                <input type="text" placeholder="Email">
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="small-2 columns ">
+                <span class="prefix"><i class="fi-lock"></i></span>
+              </div>
+              <div class="small-10 columns ">
+                <input type="text" placeholder="Password">
+              </div>
+            </div>
+          </form>
+          <a href="#" class="button ">Sign Up! </a>
+      </fieldset>
+    </div>
+
+
 <form method="POST" action="/login">
   {{ form.hidden_tag() }}
   <div class="large-9 columns">
@@ -22,8 +57,9 @@
         <input name='password' type="text" placeholder="Your Amazing Password" />
       </label>
 
-      <button type="submit" class='button tiny' value='Login'>Login</button>
+      <button type="submit" class='button' value='Login'>Login</button>
     </fieldset>
   </div>
 </form>
+
 {% endblock %}
