@@ -39,7 +39,7 @@ class Player(db.Model):
     year = db.Column(db.Integer)
     ext_id = db.Column(db.Integer)
     player_data = db.relationship('PlayerData', backref='player',
-                                lazy='dynamic')
+                                  lazy='dynamic')
 
     def __repr__(self):
         return "<Player Name: {}>".format(self.name)
@@ -55,7 +55,8 @@ class Game(db.Model):
     home = db.Column(db.Boolean)
     week = db.Column(db.Integer)
     season = db.Column(db.Integer)
-    player_data = db.relationship('PlayerData', lazy='dynamic')
+    player_data = db.relationship('PlayerData', backref='game',
+                                  lazy='dynamic')
 
     def __repr__(self):
         return "<Team: {}, Week: {}>".format(self.team, self.week)
@@ -64,7 +65,7 @@ class Game(db.Model):
 class PlayerData(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'))
-    game = db.Column(db.Integer, db.ForeignKey('game.id'))
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
     pass_attempts = db.Column(db.Integer, default=0)
     pass_completions = db.Column(db.Integer, default=0)
     pass_yards = db.Column(db.Integer, default=0)

@@ -1,6 +1,7 @@
 import http.client, re, time
 from bs4 import BeautifulSoup
-import weekly_college_fantasy.helper_functions_scrape as hf
+import weekly_college_fantasy.helper_functions_scrape as hfs
+import weekly_college_fantasy.helper_functions_db as hfdb
 from .models import Player, Game, PlayerData
 from .extensions import db
 
@@ -84,30 +85,30 @@ def url_stats_request(player_name, ext_id):
 
 def create_game_obj(each_stat_list, team):
     """Takes in a list of 'td' values associated with a row of data
-    and returns a dictionary of score, game_date, home_away, season,
-    and week"""
-    home_away, opp = hf.home_check(each_stat_list[1].text)
-    score = hf.score_breakout(each_stat_list[2].text)
-    game_date = hf.game_date_cleanup(each_stat_list[0].text)
+    and returns the game id"""
+    home_away, opp = hfs.home_check(each_stat_list[1].text)
+    score = hfs.score_breakout(each_stat_list[2].text)
+    game_date = hfs.game_date_cleanup(each_stat_list[0].text)
     game_info =  {"team": team,
                   "game_date": game_date,
                   "opponent": opp,
                   "your_score": int(score[0]),
                   "opponent_score": int(score[1]),
                   "home": home_away,
-                  "week": hf.determine_week(game_date),
-                  "season": hf.SEASON_START.year}
+                  "week": hfs.determine_week(game_date),
+                  "season": hfs.SEASON_START.year}
 
     # See if object exists and if it doesn't, save it
     exists = Game.query.filter_by(**game_info).first()
-    if exists: return exists
+    if exists: return exists.id
     else:
-        print("Game between {} & {} in week {} was added"\
-              .format(team, opp, hf.determine_week(game_date)))
+        print("Game between {} & {} in week {} is being added"\
+              .format(team, opp, hfs.determine_week(game_date)))
         game_obj = Game(**game_info)
         db.session.add(game_obj)
         db.session.commit()
-        return game_obj
+        resp = Game.query.filter_by(**game_info).first()
+        return resp.id
 
 
 def position_stat_breakout(each_stat_list, position):
@@ -158,19 +159,17 @@ def position_stat_breakout(each_stat_list, position):
 def player_lookup_main(player):
     """Master function for logging a player's performance for every week
     it can find for the current season."""
-    player_name = hf.player_name_prep(player.name)
+    player_name = hfs.player_name_prep(player.name)
     print('player: {}, ext_id: {}'.format(player_name, player.ext_id))
     labels, player_stats = url_stats_request(player_name, player.ext_id)
 
     for stat in player_stats:
         each_stat = stat.find_all('td')
-        game_obj = create_game_obj(each_stat, player.team)
         player_dict = position_stat_breakout(each_stat, player.position)
+        player_dict['game_id'] = create_game_obj(each_stat, player.team)
+        player_dict['player_id'] = player.id
         player_dict['score'] = scoring_rules_main(player_dict, player.position)
-        player_data, created = PlayerData.objects.update_or_create(
-                                player=player,
-                                game=game_obj,
-                                defaults=player_dict)
+        hfdb.player_data_update_or_create(player_dict)
 
 
 def lookup_all_player_stats(player_position):

@@ -13,7 +13,7 @@ def index():
     ## Populates and/or updates the list of players/kickers/defenses
     #main_populate_all(2016)
     ## Collects and stores latest stats for all players
-    lookup_all_player_stats('QB')
+    lookup_all_player_stats('RB')
     return render_template('index.html')
 
 @weekly_college_fantasy.route("/players")
